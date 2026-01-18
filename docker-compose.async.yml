@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  nutriscan-async:
+    build: .
+    container_name: nutriscan-async-service
+    ports:
+      - "8001:8000"
+    environment:
+      - DEBUG=True
+      - DJANGO_SECRET_KEY=nutriscan_async_secret_2024
+      - MAIN_SERVICE_URL=http://host.docker.internal:8081  # Для Mac/Windows
+      # Для Linux используйте: http://172.17.0.1:8081
+      - MAIN_SERVICE_SECRET=nutriscan_async_key_2024
+    volumes:
+      - .:/app
+      - /app/db.sqlite3  # Не монтируем SQLite файл для избежания проблем
+    networks:
+      - nutriscan-network
+    restart: unless-stopped
+
+networks:
+  nutriscan-network:
+    external: true  # Используем существующую сеть
